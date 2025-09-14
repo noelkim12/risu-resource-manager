@@ -2,6 +2,16 @@
 	import { createEventDispatcher } from "svelte";
 	import { ChevronRight } from "lucide-svelte";
 
+	/**
+	 * RisupViewer 컴포넌트
+	 * 
+	 * @example
+	 * <RisupViewer 
+	 *   parsedContent={parsedContent}
+	 *   parseError={parseError}
+	 *   on:keySelect={handleKeyClick}
+	 * />
+	 */
 	const dispatch = createEventDispatcher();
 
 	export let parsedContent = null;

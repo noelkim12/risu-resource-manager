@@ -1,8 +1,17 @@
 <script>
-  import RisupViewer from '../viewers/RisupViewer.svelte';
-  import RisumViewer from '../viewers/RisumViewer.svelte';
-  import CharxViewer from '../viewers/CharxViewer.svelte';
+  import RisupViewer from '../viewers/risup/RisupViewer.svelte';
+  import RisumViewer from '../viewers/risum/RisumViewer.svelte';
+  import CharxViewer from '../viewers/charx/CharxViewer.svelte';
   import { createEventDispatcher } from 'svelte';
+
+  /**
+   * CenterPanel 컴포넌트
+   * @example
+   * <CenterPanel 
+   *   selectedFile={selectedFile}
+   *   on:keySelect={handleKeySelect}
+   * />
+   */
 
   export let selectedFile = null;
 

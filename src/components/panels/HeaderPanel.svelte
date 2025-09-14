@@ -3,6 +3,16 @@
   import Badge from '../ui/common/Badge.svelte';
   import { FileText, Trash2, Menu, X } from 'lucide-svelte';
 
+  /**
+   * HeaderPanel 컴포넌트
+   * @example
+   * <HeaderPanel 
+   *   stats={stats}
+   *   activeTab={activeTab}
+   *   leftPanelOpen={leftPanelOpen}
+   *   filesLength={filesLength}
+   * />
+   */
   export let stats = { totalFiles: 0, totalSize: 0, types: {} };
   export let activeTab = 'risup';
   export let leftPanelOpen = true;
