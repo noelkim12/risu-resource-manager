@@ -1,4 +1,4 @@
-import { merge } from "lodash";
+import { merge } from "lodash-es";
 import { languageChinese } from "./cn";
 import { languageGerman } from "./de";
 import { languageEnglish } from "./en";
@@ -8,7 +8,7 @@ import { languageChineseTraditional } from "./zh-Hant";
 import { languageSpanish } from "./es";
 // import { googleBuild } from "src/ts/globalApi.svelte";
 
-export let language:typeof languageEnglish = languageEnglish;
+export let language:typeof languageEnglish = languageKorean;
 
 export function changeLanguage(lang = 'ko' as string){
 	if (lang === "cn") {

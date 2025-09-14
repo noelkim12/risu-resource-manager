@@ -92,12 +92,14 @@
 			{/if}
 		</div>
 
-		{#if selectedFile.type === "risup"}
-			<DefaultViewer {selectedFile} {selectedKey} {selectedValue} on:close={handleClose} />
-		{:else if selectedFile.type === "risum"}
-			<DefaultViewer {selectedFile} {selectedKey} {selectedValue} on:close={handleClose} />
-		{:else if selectedFile.type === "charx"}
-			<DefaultViewer {selectedFile} {selectedKey} {selectedValue} on:close={handleClose} />
-		{/if}
+    {#if selectedFile}
+      {#if selectedFile?.type === "risup"}
+        <DefaultViewer {selectedFile} {selectedKey} {selectedValue} on:close={handleClose} />
+      {:else if selectedFile?.type === "risum"}
+        <DefaultViewer {selectedFile} {selectedKey} {selectedValue} on:close={handleClose} />
+      {:else if selectedFile?.type === "charx"}
+        <DefaultViewer {selectedFile} {selectedKey} {selectedValue} on:close={handleClose} />
+      {/if}
+    {/if}
 	</div>
 </div>

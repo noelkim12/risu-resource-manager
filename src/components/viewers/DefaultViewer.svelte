@@ -1,6 +1,7 @@
 <script>
 	import { FileText, X } from "lucide-svelte";
 	import { createEventDispatcher } from "svelte";
+    import { language } from "$lib/i18n";
 
 	/**
 	 * DefaultViewer 컴포넌트
@@ -15,6 +16,7 @@
 	export let selectedKey = null;
 	export let selectedValue = null;
 
+	console.log(language)
 	const dispatch = createEventDispatcher();
 
 	function getModernTabGradient(tab) {
@@ -74,7 +76,7 @@
 			<div class="space-y-3">
 				<div class="rounded-lg border border-blue-100 bg-white/70 p-3">
 					<div class="mb-1 text-xs font-medium text-gray-500">키 이름</div>
-					<div class="font-semibold break-all text-gray-800">{selectedKey}</div>
+					<div class="font-semibold break-all text-gray-800">{language[selectedKey]} </div>
 				</div>
 				<div class="rounded-lg border border-blue-100 bg-white/70 p-3">
 					<div class="mb-1 text-xs font-medium text-gray-500">데이터 타입</div>

@@ -68,7 +68,7 @@
     "buffer": "^6.0.3",
     "fflate": "^0.8.2",
     "localforage": "^1.10.0",
-    "lodash": "^4.17.21",
+    "lodash-es": "^4.17.21",
     "msgpackr": "^1.11.5"
   }
 }
