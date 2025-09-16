@@ -1,0 +1,12 @@
+// pnpm run dev
+// 코드 실행 명령어
+{
+    "type": "shell",
+    "command": "pnpm run dev",
+    "problemMatcher": [],
+    // 코드 실행 그룹
+    "group": {
+        "kind": "build",
+        "isDefault": true
+    }
+}
