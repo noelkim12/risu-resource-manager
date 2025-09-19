@@ -27,20 +27,20 @@
 {:else if styled}
 	<div class="mt-2 flex flex-col">
 		<button
-			class="hover:bg-selected border-selected rounded-t-md border px-6 py-2 text-lg"
-			class:bg-selected={open}
-			class:rounded-b-md={!open}
+			class="w-full text-left p-3 rounded-lg border-2 border-gray-300 hover:border-blue-400 hover:bg-blue-50 transition-colors text-gray-800"
+			class:bg-blue-50={open}
+			class:border-blue-400={open}
 			onclick={() => {
 				open = !open;
 			}}
 		>
-			<span class="mr-2">{name}</span>
+			<span class="mr-2 font-medium">{name}</span>
 			{#if help}
 				<Help key={help} />
 			{/if}</button
 		>
 		{#if open}
-			<div class={"border-selected flex flex-col rounded-b-md border p-2 " + className}>
+			<div class={"flex flex-col rounded-b-lg border-2 border-gray-300 border-t-0 bg-white p-2 " + className}>
 				{@render children?.()}
 			</div>
 		{/if}
@@ -48,14 +48,16 @@
 {:else}
 	<div class="flex flex-col">
 		<button
-			class="hover:bg-selected px-6 py-2 text-lg"
-			class:bg-selected={open}
+			class="mb-2 w-full text-left p-3 rounded-lg border-2 border-gray-300 hover:border-blue-400 hover:bg-blue-50 transition-colors text-gray-800"
+			class:bg-blue-50={open}
+			class:mb-2={!open}
+			class:border-blue-400={open}
 			onclick={() => {
 				open = !open;
 			}}>{name}</button
 		>
 		{#if open}
-			<div class="bg-darkbg flex flex-col">
+			<div class="flex flex-col rounded-b-lg border-2 border-gray-300 border-t-0 bg-white p-2">
 				{@render children?.()}
 			</div>
 		{/if}

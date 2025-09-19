@@ -1,4 +1,4 @@
-import type { alertData } from "$lib/utils/alert";
+import type { alertData } from "../../types/risu/system/alert.type";
 import { get, writable, type Writable } from "svelte/store";
 import type {
 	Character,
@@ -7,11 +7,13 @@ import type {
 import type { GroupChat } from "../../types/risu/system/chatting.types";
 
 function updateSize() {
-	SizeStore.set({
-		w: window.innerWidth,
-		h: window.innerHeight,
-	});
-	DynamicGUI.set(window.innerWidth <= 1024);
+	if (typeof window !== 'undefined') {
+		SizeStore.set({
+			w: window.innerWidth,
+			h: window.innerHeight,
+		});
+		DynamicGUI.set(window.innerWidth <= 1024);
+	}
 }
 
 export const SizeStore = writable({
@@ -23,7 +25,7 @@ const t = "https://raw.githubusercontent.com/ProjectAliceDev/ProjectAliceDev.git
 export const loadedStore = writable(false);
 export const DynamicGUI = writable(false);
 export const sideBarClosing = writable(false);
-export const sideBarStore = writable(window.innerWidth > 1024);
+export const sideBarStore = writable(typeof window !== 'undefined' ? window.innerWidth > 1024 : false);
 export const selectedCharID = writable(-1);
 export const CharEmotion = writable({} as { [key: string]: [string, string, number][] });
 export const ViewBoxsize = writable({ width: 12 * 16, height: 12 * 16 }); // Default width and height in pixels
@@ -64,15 +66,17 @@ export const selIdState = $state({
 });
 
 CustomCSSStore.subscribe((css) => {
-	console.log(css);
-	const q = document.querySelector("#customcss");
-	if (q) {
-		q.innerHTML = css;
-	} else {
-		const s = document.createElement("style");
-		s.id = "customcss";
-		s.innerHTML = css;
-		document.body.appendChild(s);
+	if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+		console.log(css);
+		const q = document.querySelector("#customcss");
+		if (q) {
+			q.innerHTML = css;
+		} else {
+			const s = document.createElement("style");
+			s.id = "customcss";
+			s.innerHTML = css;
+			document.body.appendChild(s);
+		}
 	}
 });
 
@@ -94,8 +98,10 @@ export function createSimpleCharacter(char: Character | GroupChat) {
 	return simpleChar;
 }
 
-updateSize();
-window.addEventListener("resize", updateSize);
+if (typeof window !== 'undefined') {
+	updateSize();
+	window.addEventListener("resize", updateSize);
+}
 
 export const LoadingStatusState = $state({
 	text: "",

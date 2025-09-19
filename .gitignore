@@ -31,3 +31,4 @@ storybook-static
 .vite
 dist
 build
+docs
