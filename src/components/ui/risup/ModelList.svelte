@@ -17,7 +17,12 @@
 		blankable?: boolean;
 	}
 
-	let { value = $bindable(""), onChange = (v) => {}, onclick, blankable }: Props = $props();
+	let {
+		value = $bindable(""),
+		onChange = (v) => {},
+		onclick: onclick,
+		blankable,
+	}: Props = $props();
 	let openOptions = $state(false);
 
 	function changeModel(name: string) {
