@@ -1,12 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from "svelte";
-  import { language } from "$lib/i18n";
-  import ModelList from "../../ui/risup/ModelList.svelte";
-  import Help from "../../ui/common/others/Help.svelte";
   import { getModelInfo } from "../../../lib/utils/modelList";
   import { risupStore, currentRisupContent } from "../../../lib/stores/risup.store";
-  import ViewerButton from "../../ui/common/ViewerButton.svelte";
-  import SliderInput from "../../ui/common/forms/SliderInput.svelte";
   import ModelCommonAttrButtons from "./attribute/model/buttons/ModelCommonAttrButtons.svelte";
   import type { BotPreset } from "../../../types/risu/preset.types";
   import { FileText } from "lucide-svelte";
@@ -61,10 +56,6 @@
   // store에서 현재 content 가져오기 (store 우선, props는 백업)
   const storeContent = $derived($currentRisupContent);
   const currentContent = $derived((storeContent as BotPreset) || ({} as BotPreset));
-  const keys = $derived(currentContent ? Object.keys(currentContent) : []);
-  const dynamicModelInfo = $derived(getModelInfo(currentContent?.aiModel || ""));
-
-  const DBState = $derived({ db: currentContent });
 
   // 탭 설정
   const tabs = [
@@ -78,8 +69,9 @@
   function changeValue(key: string, value: any) {}
 
   function openJsonModal() {
-    if (currentContent) {
-      jsonModalStore.open("RISUP 파일 JSON 전체 보기", currentContent);
+    if ($currentRisupContent) {
+      console.log($currentRisupContent);
+      jsonModalStore.open("RISUP 파일 JSON 전체 보기", $currentRisupContent);
     }
   }
 </script>

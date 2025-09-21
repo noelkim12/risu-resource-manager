@@ -1,8 +1,17 @@
 <script lang="ts">
   import { Copy, X } from "lucide-svelte";
   import { onMount, onDestroy } from "svelte";
-  import { browser } from "$app/environment";
 
+  /**
+   * JsonModal 컴포넌트
+   * @example
+   * <JsonModal
+   *   isOpen={isOpen}
+   *   title={title}
+   *   jsonData={jsonData}
+   *   onClose={onClose}
+   * />
+   */
   interface Props {
     isOpen?: boolean;
     title?: string;
@@ -40,18 +49,16 @@
   }
 
   onMount(async () => {
-    if (browser) {
-      try {
-        // 브라우저에서만 JSONEditor 동적 import
-        const module = await import("jsoneditor");
-        JSONEditor = module.default;
+    try {
+      // 브라우저에서만 JSONEditor 동적 import
+      const module = await import("jsoneditor");
+      JSONEditor = module.default;
 
-        if (jsonEditorContainer && jsonData && JSONEditor) {
-          initJsonEditor();
-        }
-      } catch (error) {
-        console.error("Failed to load JSONEditor:", error);
+      if (jsonEditorContainer && jsonData && JSONEditor) {
+        initJsonEditor();
       }
+    } catch (error) {
+      console.error("Failed to load JSONEditor:", error);
     }
   });
 
@@ -63,14 +70,18 @@
   });
 
   function initJsonEditor() {
-    if (!JSONEditor || !browser) return;
+    console.log("initJsonEditor");
+    if (!JSONEditor) {
+      console.log("JSONEditor not loaded");
+      return;
+    }
 
     if (jsonEditor) {
       jsonEditor.destroy();
     }
 
     const options = {
-      mode: 'tree',
+      mode: "tree",
       readOnly: true,
       search: true,
       navigationBar: false,
@@ -78,21 +89,22 @@
       mainMenuBar: false,
       expandAll: false,
       onError: (error: Error) => {
-        console.error('JSONEditor error:', error);
-      }
+        console.error("JSONEditor error:", error);
+      },
     };
 
     try {
       jsonEditor = new JSONEditor(jsonEditorContainer, options);
+      console.log(jsonData);
       jsonEditor.set(jsonData);
       jsonEditor.expandAll();
     } catch (error) {
-      console.error('Failed to initialize JSONEditor:', error);
+      console.error("Failed to initialize JSONEditor:", error);
     }
   }
 
   $effect(() => {
-    if (isOpen && jsonEditorContainer && jsonData && JSONEditor && !jsonEditor) {
+    if (isOpen && jsonEditorContainer && jsonData) {
       initJsonEditor();
     } else if (jsonEditor && jsonData) {
       jsonEditor.set(jsonData);
@@ -114,6 +126,9 @@
     <div
       class="relative h-[80vh] w-full max-w-4xl rounded-xl bg-white shadow-2xl dark:bg-gray-800"
       onclick={(e) => e.stopPropagation()}
+      onkeydown={(e) => e.stopPropagation()}
+      role="button"
+      tabindex="0"
     >
       <!-- 모달 헤더 -->
       <div
@@ -217,15 +232,3 @@
     color: #9ca3af !important;
   }
 </style>
-
-<!--
-  JsonModal 컴포넌트 - 재사용 가능한 JSON 뷰어 모달
-
-  @example
-  <JsonModal
-    isOpen={showModal}
-    title="RISUP 파일 JSON"
-    jsonData={currentContent}
-    onClose={() => setShowModal(false)}
-  />
--->
