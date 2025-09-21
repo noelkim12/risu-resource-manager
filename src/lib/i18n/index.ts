@@ -8,30 +8,22 @@ import { languageChineseTraditional } from "./zh-Hant";
 import { languageSpanish } from "./es";
 // import { googleBuild } from "src/ts/globalApi.svelte";
 
-export let language:typeof languageEnglish = languageKorean;
+export let language: typeof languageEnglish = languageKorean;
 
-export function changeLanguage(lang = 'ko' as string){
-	if (lang === "cn") {
-		language = merge(structuredClone(languageEnglish), languageChinese);
-	} else if (lang === "de") {
-		language = merge(structuredClone(languageEnglish), languageGerman);
-	} else if (lang === "ko") {
-		language = merge(structuredClone(languageEnglish), languageKorean);
-	} else if (lang === "vi") {
-		language = merge(structuredClone(languageEnglish), LanguageVietnamese);
-	} else if (lang === "zh-Hant") {
-		language = merge(structuredClone(languageEnglish), languageChineseTraditional);
-	} else if (lang === "es") {
-		language = merge(structuredClone(languageEnglish), languageSpanish);
-	} else {
-		language = languageEnglish;
-	}
-	/* 
-    if(googleBuild){
-        language.jailbreakPrompt = "Togglable Prompt"
-        language.help.jailbreak = ''
-        language.help.toggleNsfw = ''
-        language.jailbreakToggle = 'Toggle Togglable Prompt'
-    }
-     */
+export function changeLanguage(lang = "ko" as string) {
+  if (lang === "cn") {
+    language = merge(structuredClone(languageEnglish), languageChinese);
+  } else if (lang === "de") {
+    language = merge(structuredClone(languageEnglish), languageGerman);
+  } else if (lang === "ko") {
+    language = merge(structuredClone(languageEnglish), languageKorean);
+  } else if (lang === "vi") {
+    language = merge(structuredClone(languageEnglish), LanguageVietnamese);
+  } else if (lang === "zh-Hant") {
+    language = merge(structuredClone(languageEnglish), languageChineseTraditional);
+  } else if (lang === "es") {
+    language = merge(structuredClone(languageEnglish), languageSpanish);
+  } else {
+    language = languageEnglish;
+  }
 }

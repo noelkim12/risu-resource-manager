@@ -1,0 +1,132 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "[svelte]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.bracketPairColorization.enabled": true,
+    "editor.guides.bracketPairs": "active",
+    "editor.autoClosingBrackets": "always",
+    "editor.autoClosingQuotes": "always"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "editor.renderWhitespace": "all",
+  "editor.whitespace": {
+    "renderWhitespace": "all",
+    "renderControlCharacters": true
+  },
+  "editor.guides": {
+    "indentation": true,
+    "bracketPairs": true
+  },
+  "editor.bracketPairColorization.enabled": true,
+  "editor.matchBrackets": "always",
+  "editor.bracketPairColorization.independentColorPoolPerBracketType": true,
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.bracketPairColorization.enabled": true,
+    "editor.guides.bracketPairs": "active"
+  },
+  "html.format.wrapAttributes": "preserve-aligned",
+  "emmet.includeLanguages": {
+    "svelte": "html"
+  },
+  "editor.quickSuggestions": {
+    "strings": true,
+    "comments": false,
+    "other": true
+  },
+  "editor.suggestSelection": "first",
+  "editor.snippetSuggestions": "top",
+  "editor.tabCompletion": "on",
+  "svelte.enable-ts-plugin": true,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "javascript.preferences.importModuleSpecifier": "relative",
+  "files.exclude": {
+    "**/.svelte-kit": true,
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/.turbo": true
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/.svelte-kit": true,
+    "**/dist": true,
+    "**/package-lock.json": true
+  },
+  "tailwindCSS.includeLanguages": {
+    "svelte": "html"
+  },
+  "tailwindCSS.emmetCompletions": true,
+  "tailwindCSS.classAttributes": ["class", "className", "ngClass"],
+  "editor.linkedEditing": true,
+  "editor.stickyScroll.enabled": true,
+  "editor.inlineSuggest.enabled": true,
+  "editor.unicodeHighlight.allowedLocales": {
+    "ko": true
+  },
+  "git.autofetch": true,
+  "git.confirmSync": false,
+  "terminal.integrated.defaultProfile.windows": "PowerShell",
+  "terminal.integrated.fontSize": 14,
+  "files.autoSave": "onFocusChange",
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "editor.wordWrap": "on",
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.suggest.insertMode": "replace"
+  },
+  "css.validate": false,
+  "scss.validate": false,
+  "files.watcherExclude": {
+    "**/.svelte-kit/**": true,
+    "**/node_modules/**": true,
+    "**/dist/**": true
+  },
+  "typescript.tsserver.maxTsServerMemory": 4096,
+  "highlight-matching-tag.enabled": true,
+  "highlight-matching-tag.styles": {
+    "opening": {
+      "left": {
+        "custom": {
+          "borderWidth": "0 0 2px 0",
+          "borderStyle": "solid",
+          "borderColor": "yellow",
+          "backgroundColor": "rgba(255, 255, 0, 0.1)"
+        }
+      },
+      "right": {
+        "custom": {
+          "borderWidth": "0 0 2px 0",
+          "borderStyle": "solid",
+          "borderColor": "yellow"
+        }
+      },
+      "name": {
+        "highlight": "rgba(255, 255, 0, 0.2)"
+      }
+    }
+  },
+  "editor.occurrencesHighlight": "multiFile",
+  "editor.selectionHighlight": true,
+  "editor.wordHighlightBackground": "#575757",
+  "editor.wordHighlightStrongBackground": "#004972",
+  "html.autoClosingTags": true,
+  "html.mirrorCursorOnMatchingTag": true,
+  "html.trace.server": "off",
+  "svelte.plugin.svelte.diagnostics.enable": true,
+  "svelte.plugin.svelte.defaultScriptLanguage": "ts"
+}

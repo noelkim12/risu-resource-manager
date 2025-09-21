@@ -1,4 +1,5 @@
-import { unzip, zip, Unzipped, Zippable } from 'fflate';
+import { unzip, zip } from 'fflate';
+import type { Unzipped, Zippable } from 'fflate';
 
 const textDecoder = new TextDecoder('utf-8');
 const textEncoder = new TextEncoder();

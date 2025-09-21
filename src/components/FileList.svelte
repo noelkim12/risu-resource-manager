@@ -68,10 +68,8 @@
 				{#each files as file (file.id)}
 					<button
 						type="button"
-						class="group hover:bg-accent flex cursor-pointer items-center justify-between rounded-lg p-3 transition-colors w-full text-left {selectedFileId ===
-						file.id
-							? 'bg-accent border-primary border'
-							: ''}"
+						class="group hover:bg-accent flex cursor-pointer items-center justify-between rounded-lg p-3 transition-colors w-full text-left 
+						      {selectedFileId === file.id ? 'bg-accent border-primary border' : ''}"
 						on:click={() => handleFileSelect(file.id)}
 					>
 						<div class="flex min-w-0 flex-1 items-center gap-3">
@@ -82,10 +80,8 @@
 								</div>
 								<div class="mt-1 flex items-center gap-2">
 									<span
-										class="inline-flex items-center rounded-full px-2 py-1 text-xs font-medium {getFileTypeColor(
-											file.type
-										)}"
-									>
+										class="inline-flex items-center rounded-full px-2 py-1 text-xs font-medium 
+										{getFileTypeColor(file.type)}" >
 										.{file.type}
 									</span>
 									<span class="text-muted-foreground text-xs">

@@ -1,9 +1,8 @@
-@import 'tailwindcss';
-@plugin '@tailwindcss/forms';
-@plugin '@tailwindcss/typography';
+@import "tailwindcss";
+@import "jsoneditor/dist/jsoneditor.css";
 
 /* CSS Custom Properties for Design System */
-:root {
+: root {
   --background: 0 0% 100%;
   --foreground: 220.9 39.3% 11%;
   --card: 0 0% 100%;
@@ -50,6 +49,72 @@
   }
 }
 
+/* Global settings */
+:global(body) {
+  margin: 0;
+}
+
+:global(.bg-accent) {
+  background-color: hsl(var(--accent, 220 14.3% 95.9%));
+}
+
+/* Custom scrollbar styling */
+:global(::-webkit-scrollbar) {
+  width: 6px;
+}
+
+:global(::-webkit-scrollbar-track) {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 3px;
+}
+
+:global(::-webkit-scrollbar-thumb) {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+:global(::-webkit-scrollbar-thumb:hover) {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* Smooth transitions for all interactive elements */
+:global(button, .transition-all) {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Backdrop blur fallback for browsers that don't support it */
+@supports not (backdrop-filter: blur(12px)) {
+  :global(.backdrop-blur-xl) {
+    background-color: rgba(255, 255, 255, 0.85);
+  }
+
+  :global(.backdrop-blur-sm) {
+    background-color: rgba(255, 255, 255, 0.75);
+  }
+}
+
+/* Improved focus styles */
+:global(:focus-visible) {
+  outline: 2px solid rgba(59, 130, 246, 0.5);
+  outline-offset: 2px;
+}
+
+/* Animation keyframes */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+:global(.animate-fade-in-up) {
+  animation: fadeInUp 0.6s ease-out;
+}
+
 /* RisuAI File Manager specific styles */
 .file-dropzone {
   transition: all 0.2s ease-in-out;
@@ -74,5 +139,55 @@
 }
 
 .file-viewer-content {
-  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  font-family:
+    "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace;
+}
+
+/* Global font settings */
+body {
+  font-family:
+    "Pretendard Variable",
+    Pretendard,
+    -apple-system,
+    BlinkMacSystemFont,
+    system-ui,
+    Roboto,
+    "Helvetica Neue",
+    "Segoe UI",
+    "Apple SD Gothic Neo",
+    "Noto Sans KR",
+    "Malgun Gothic",
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
+    "Segoe UI Symbol",
+    sans-serif;
+}
+
+/* Key button styles */
+.key-button {
+  @apply w-full rounded-lg border border-gray-200 p-3 text-left transition-colors hover:border-blue-300 hover:bg-blue-50;
+}
+
+.key-button-content {
+  @apply flex items-center justify-between;
+}
+
+.key-button-info {
+  @apply flex-1;
+}
+
+.key-button-title {
+  @apply font-medium text-gray-800;
+}
+
+.key-button-description {
+  @apply mt-1 text-sm text-gray-500;
+}
+
+.key-button-icon {
+  @apply h-4 w-4 text-gray-400 transition-colors group-hover:text-blue-500;
+}
+
+.rrm-detail-pre {
+  @apply max-h-[calc(100vh-30rem)] overflow-y-scroll rounded-lg border border-gray-100 bg-white/50 p-3 text-xs break-all whitespace-pre-wrap text-gray-700;
 }

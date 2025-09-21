@@ -1,31 +1,33 @@
 import type { alertData } from "../../types/risu/system/alert.type";
 import { get, writable, type Writable } from "svelte/store";
 import type {
-	Character,
-	SimpleCharacterArgument,
+  Character,
+  SimpleCharacterArgument,
 } from "../../types/risu/character/character.types";
 import type { GroupChat } from "../../types/risu/system/chatting.types";
 
 function updateSize() {
-	if (typeof window !== 'undefined') {
-		SizeStore.set({
-			w: window.innerWidth,
-			h: window.innerHeight,
-		});
-		DynamicGUI.set(window.innerWidth <= 1024);
-	}
+  if (typeof window !== "undefined") {
+    SizeStore.set({
+      w: window.innerWidth,
+      h: window.innerHeight,
+    });
+    DynamicGUI.set(window.innerWidth <= 1024);
+  }
 }
 
 export const SizeStore = writable({
-	w: 0,
-	h: 0,
+  w: 0,
+  h: 0,
 });
 
 const t = "https://raw.githubusercontent.com/ProjectAliceDev/ProjectAliceDev.github.io/master/";
 export const loadedStore = writable(false);
 export const DynamicGUI = writable(false);
 export const sideBarClosing = writable(false);
-export const sideBarStore = writable(typeof window !== 'undefined' ? window.innerWidth > 1024 : false);
+export const sideBarStore = writable(
+  typeof window !== "undefined" ? window.innerWidth > 1024 : false
+);
 export const selectedCharID = writable(-1);
 export const CharEmotion = writable({} as { [key: string]: [string, string, number][] });
 export const ViewBoxsize = writable({ width: 12 * 16, height: 12 * 16 }); // Default width and height in pixels
@@ -51,65 +53,65 @@ export const MobileSearch = writable("");
 export const CharConfigSubMenu = writable(0);
 export const CustomGUISettingMenuStore = writable(false);
 export const alertStore = writable({
-	type: "none",
-	msg: "n",
+  type: "none",
+  msg: "n",
 } as alertData);
 export const hypaV3ModalOpen = writable(false);
 export const hypaV3ProgressStore = writable({
-	open: false,
-	miniMsg: "",
-	msg: "",
-	subMsg: "",
+  open: false,
+  miniMsg: "",
+  msg: "",
+  subMsg: "",
 });
 export const selIdState = $state({
-	selId: -1,
+  selId: -1,
 });
 
 CustomCSSStore.subscribe((css) => {
-	if (typeof window !== 'undefined' && typeof document !== 'undefined') {
-		console.log(css);
-		const q = document.querySelector("#customcss");
-		if (q) {
-			q.innerHTML = css;
-		} else {
-			const s = document.createElement("style");
-			s.id = "customcss";
-			s.innerHTML = css;
-			document.body.appendChild(s);
-		}
-	}
+  if (typeof window !== "undefined" && typeof document !== "undefined") {
+    console.log(css);
+    const q = document.querySelector("#customcss");
+    if (q) {
+      q.innerHTML = css;
+    } else {
+      const s = document.createElement("style");
+      s.id = "customcss";
+      s.innerHTML = css;
+      document.body.appendChild(s);
+    }
+  }
 });
 
 export function createSimpleCharacter(char: Character | GroupChat) {
-	if (!char || char.type === "group") {
-		return null;
-	}
+  if (!char || char.type === "group") {
+    return null;
+  }
 
-	const simpleChar: SimpleCharacterArgument = {
-		type: "simple",
-		customscript: char.customscript,
-		chaId: char.chaId,
-		additionalAssets: char.additionalAssets,
-		virtualscript: char.virtualscript,
-		emotionImages: char.emotionImages,
-		triggerscript: char.triggerscript,
-	};
+  const simpleChar: SimpleCharacterArgument = {
+    type: "simple",
+    customscript: char.customscript,
+    chaId: char.chaId,
+    additionalAssets: char.additionalAssets,
+    virtualscript: char.virtualscript,
+    emotionImages: char.emotionImages,
+    triggerscript: char.triggerscript,
+  };
 
-	return simpleChar;
+  return simpleChar;
 }
 
-if (typeof window !== 'undefined') {
-	updateSize();
-	window.addEventListener("resize", updateSize);
+if (typeof window !== "undefined") {
+  updateSize();
+  window.addEventListener("resize", updateSize);
 }
 
 export const LoadingStatusState = $state({
-	text: "",
+  text: "",
 });
 
 export const QuickSettings = $state({
-	open: false,
-	index: 0,
+  open: false,
+  index: 0,
 });
 
 export const disableHighlight = writable(true);

@@ -1,20 +1,23 @@
 <script>
-  import { writable } from 'svelte/store';
-  import { onMount } from 'svelte';
-  import HeaderPanel from '../components/panels/HeaderPanel.svelte';
-  import LeftPanel from '../components/panels/LeftPanel.svelte';
-  import CenterPanel from '../components/panels/CenterPanel.svelte';
-  import RightPanel from '../components/panels/RightPanel.svelte';
-  import AlertDialog from '../components/ui/common/AlertDialog.svelte';
-  import { risuStorage, initializeStorage } from '$lib/storage';
-  import { debounce } from '$lib/utils/debounce';
+  import { writable } from "svelte/store";
+  import { onMount } from "svelte";
+  import HeaderPanel from "../components/panels/HeaderPanel.svelte";
+  import LeftPanel from "../components/panels/LeftPanel.svelte";
+  import CenterPanel from "../components/panels/CenterPanel.svelte";
+  import RightPanel from "../components/panels/RightPanel.svelte";
+  import AlertDialog from "../components/ui/common/AlertDialog.svelte";
+  import JsonModal from "../components/ui/common/JsonModal.svelte";
+  import { risuStorage, initializeStorage } from "$lib/storage";
+  import { debounce } from "$lib/utils/debounce";
+  import { selectionStore, currentSelection } from "../lib/stores/selection.store";
+  import { jsonModalState, jsonModalStore } from "../lib/stores/jsonModal.store";
 
   // File store
   const files = writable([]);
   const selectedFileId = writable(null);
 
   // New state for tabs and panels
-  const activeTab = writable('risup');
+  const activeTab = writable("risup");
   const leftPanelOpen = writable(true);
 
   // Right panel state for key-value display
@@ -26,15 +29,22 @@
   let isLoading = true;
 
   // Reactive declarations for computed values
-  $: selectedFile = $files.find(file => file.id === $selectedFileId) || null;
+  $: selectedFile = $files.find((file) => file.id === $selectedFileId) || null;
   $: stats = getFileStats($files);
-  $: filteredFiles = $files.filter(file => file.type === $activeTab);
+  $: filteredFiles = $files.filter((file) => file.type === $activeTab);
+
+  // selection store 변화 감지하여 rightPanel 자동 활성화
+  $: if ($currentSelection.isComplete && $currentSelection.fieldKey) {
+    rightPanelVisible.set(true);
+    selectedKey.set($currentSelection.fieldKey);
+    // selectedValue는 RightPanel에서 자체적으로 계산하므로 여기서는 설정하지 않음
+  }
 
   // Debug logging
   $: if (selectedFile) {
-    console.log('Selected file:', selectedFile.name, selectedFile.type);
+    console.log("Selected file:", selectedFile.name, selectedFile.type);
   } else {
-    console.log('No file selected');
+    console.log("No file selected");
   }
 
   function getFileStats(fileList) {
@@ -48,10 +58,9 @@
     return { totalFiles, totalSize, types };
   }
 
-
   async function handleFilesAdded(event) {
     const newFiles = event.detail;
-    files.update(prev => [...prev, ...newFiles]);
+    files.update((prev) => [...prev, ...newFiles]);
 
     // 새로 추가된 파일들을 저장소에 저장
     for (const file of newFiles) {
@@ -74,13 +83,13 @@
 
   async function handleFileDelete(event) {
     const fileId = event.detail;
-    files.update(prev => prev.filter(file => file.id !== fileId));
+    files.update((prev) => prev.filter((file) => file.id !== fileId));
 
     // 저장소에서도 삭제
     try {
       await risuStorage.deleteFile(fileId);
     } catch (error) {
-      console.warn('Failed to delete file from storage:', error);
+      console.warn("Failed to delete file from storage:", error);
     }
 
     // 삭제된 파일이 선택된 파일이었다면 선택 해제
@@ -92,11 +101,13 @@
 
   function handleFileUpdate(event) {
     const { fileId, newContent } = event.detail;
-    files.update(prev => prev.map(file => 
-      file.id === fileId 
-        ? { ...file, content: newContent, size: new Blob([newContent]).size }
-        : file
-    ));
+    files.update((prev) =>
+      prev.map((file) =>
+        file.id === fileId
+          ? { ...file, content: newContent, size: new Blob([newContent]).size }
+          : file
+      )
+    );
   }
 
   async function handleClearAll() {
@@ -108,7 +119,7 @@
     try {
       await risuStorage.clearAll();
     } catch (error) {
-      console.warn('Failed to clear storage:', error);
+      console.warn("Failed to clear storage:", error);
     }
   }
 
@@ -124,7 +135,7 @@
   }
 
   function handleToggleLeftPanel() {
-    leftPanelOpen.update(open => !open);
+    leftPanelOpen.update((open) => !open);
     debouncedSaveState();
   }
 
@@ -140,7 +151,56 @@
     rightPanelVisible.set(false);
     selectedKey.set(null);
     selectedValue.set(null);
+    selectionStore.clearField(); // selection store의 fieldKey도 클리어
     debouncedSaveState();
+  }
+
+  async function handleValueUpdate(event) {
+    const { key, value } = event.detail;
+
+    // 현재 선택된 파일의 parsedContent 업데이트
+    if (selectedFile && selectedFile.parsedContent) {
+      let updatedFile;
+
+      files.update((prev) =>
+        prev.map((file) => {
+          if (file.id === selectedFile.id) {
+            // 중첩된 키 경로 처리 (예: "data.settings.aiModel")
+            const keyPath = key.split(".");
+            const updatedContent = { ...file.parsedContent };
+
+            let current = updatedContent;
+            for (let i = 0; i < keyPath.length - 1; i++) {
+              if (!current[keyPath[i]]) current[keyPath[i]] = {};
+              current = current[keyPath[i]];
+            }
+            current[keyPath[keyPath.length - 1]] = value;
+
+            updatedFile = {
+              ...file,
+              parsedContent: updatedContent,
+            };
+            return updatedFile;
+          }
+          return file;
+        })
+      );
+
+      // selectedValue도 업데이트
+      selectedValue.set(value);
+
+      // 저장소에 parsedContent 변경사항 저장
+      if (updatedFile) {
+        try {
+          await risuStorage.saveParsedContent(updatedFile.id, updatedFile.parsedContent);
+        } catch (error) {
+          console.warn("Failed to save updated parsedContent to storage:", error);
+        }
+      }
+
+      // 앱 상태 저장
+      debouncedSaveState();
+    }
   }
 
   // 디바운싱된 상태 저장 함수
@@ -152,10 +212,10 @@
         leftPanelOpen: $leftPanelOpen,
         rightPanelVisible: $rightPanelVisible,
         selectedKey: $selectedKey,
-        selectedValue: $selectedValue
+        selectedValue: $selectedValue,
       });
     } catch (error) {
-      console.warn('Failed to save app state:', error);
+      console.warn("Failed to save app state:", error);
     }
   }, 500);
 
@@ -168,7 +228,7 @@
         type: file.type,
         size: file.size,
         uploadedAt: file.uploadedAt.toISOString(),
-        parseError: file.parseError
+        parseError: file.parseError,
       };
 
       await risuStorage.saveFile(storedFile);
@@ -177,7 +237,7 @@
         await risuStorage.saveParsedContent(file.id, file.parsedContent);
       }
     } catch (error) {
-      console.warn('Failed to save file to storage:', error);
+      console.warn("Failed to save file to storage:", error);
     }
   }
 
@@ -196,9 +256,9 @@
           type: storedFile.type,
           size: storedFile.size,
           uploadedAt: new Date(storedFile.uploadedAt),
-          content: '', // 원본 content는 저장하지 않음
+          content: "", // 원본 content는 저장하지 않음
           parsedContent,
-          parseError: storedFile.parseError
+          parseError: storedFile.parseError,
         };
 
         loadedFiles.push(file);
@@ -207,7 +267,7 @@
       files.set(loadedFiles);
       return loadedFiles;
     } catch (error) {
-      console.warn('Failed to load files from storage:', error);
+      console.warn("Failed to load files from storage:", error);
       return [];
     }
   }
@@ -224,7 +284,7 @@
       selectedKey.set(state.selectedKey);
       selectedValue.set(state.selectedValue);
     } catch (error) {
-      console.warn('Failed to load app state:', error);
+      console.warn("Failed to load app state:", error);
     }
   }
 
@@ -235,7 +295,7 @@
       await loadFilesFromStorage();
       await loadAppState();
     } catch (error) {
-      console.error('Failed to initialize app:', error);
+      console.error("Failed to initialize app:", error);
     } finally {
       isLoading = false;
     }
@@ -247,12 +307,14 @@
   <meta name="description" content="RisuAI 리소스(.risup, .risum, .charx) 관리 도구" />
 </svelte:head>
 
-<div class="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+<div class="flex min-h-screen flex-col bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
   {#if isLoading}
     <!-- Loading State -->
-    <div class="min-h-screen flex items-center justify-center">
+    <div class="flex min-h-screen items-center justify-center">
       <div class="text-center">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+        <div
+          class="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2 border-blue-500"
+        ></div>
         <div class="text-gray-600">데이터를 불러오는 중...</div>
       </div>
     </div>
@@ -268,40 +330,44 @@
       on:clearAll={() => (showClearDialog = true)}
     />
 
-  <!-- Main Content -->
-  <main class="flex-1 flex p-6 gap-6 min-h-0">
-    <!-- Left Panel (20% when right panel visible, flexible when not) -->
-    <div class="{$rightPanelVisible ? 'w-1/5' : 'flex-none'} transition-all duration-300 sticky top-6 self-start max-h-[calc(100vh-8rem)] overflow-hidden">
-      <LeftPanel
-        leftPanelOpen={$leftPanelOpen}
-        filteredFiles={filteredFiles}
-        selectedFileId={$selectedFileId}
-        activeTab={$activeTab}
-        on:filesAdded={handleFilesAdded}
-        on:fileSelect={handleFileSelect}
-        on:fileDelete={handleFileDelete}
-      />
-    </div>
+    <!-- Main Content -->
+    <main class="flex min-h-0 flex-1 gap-6 p-6">
+      <!-- Left Panel (20% when right panel visible, flexible when not) -->
+      <div
+        class="{$rightPanelVisible
+          ? 'w-1/5'
+          : 'flex-none'} sticky top-6 max-h-[calc(100vh-8rem)] self-start overflow-hidden transition-all duration-300"
+      >
+        <LeftPanel
+          leftPanelOpen={$leftPanelOpen}
+          {filteredFiles}
+          selectedFileId={$selectedFileId}
+          activeTab={$activeTab}
+          on:filesAdded={handleFilesAdded}
+          on:fileSelect={handleFileSelect}
+          on:fileDelete={handleFileDelete}
+        />
+      </div>
 
-    <!-- Center Panel (20% when right panel visible, flexible when not) -->
-    <div class="{$rightPanelVisible ? 'w-1/5' : 'flex-1'} transition-all duration-300 min-w-0">
-      <CenterPanel
-        selectedFile={selectedFile}
-        on:keySelect={handleKeySelect}
-      />
-    </div>
+      <!-- Center Panel (20% when right panel visible, flexible when not) -->
+      <div class="{$rightPanelVisible ? 'w-1/5' : 'flex-1'} min-w-0 transition-all duration-300">
+        <CenterPanel {selectedFile} on:keySelect={handleKeySelect} />
+      </div>
 
-    <!-- Right Panel (60% when visible, hidden when not) -->
-    <div class="{$rightPanelVisible ? 'w-3/5' : 'w-0'} transition-all duration-300 overflow-hidden sticky top-6 self-start max-h-[calc(100vh-8rem)]">
-      <RightPanel
-        selectedFile={selectedFile}
-        selectedKey={$selectedKey}
-        selectedValue={$selectedValue}
-        isVisible={$rightPanelVisible}
-        on:close={handleRightPanelClose}
-      />
-    </div>
-  </main>
+      <!-- Right Panel (60% when visible, hidden when not) -->
+      <div
+        class="{$rightPanelVisible
+          ? 'w-3/5'
+          : 'w-0'} sticky top-6 h-[calc(100vh-4rem)] self-start overflow-hidden transition-all duration-300"
+      >
+        <RightPanel
+          files={$files}
+          isVisible={$rightPanelVisible}
+          on:close={handleRightPanelClose}
+          on:valueUpdate={handleValueUpdate}
+        />
+      </div>
+    </main>
   {/if}
 </div>
 
@@ -311,74 +377,13 @@
   title="모든 파일 삭제"
   description="모든 파일을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다."
   on:confirm={handleClearAll}
-  on:cancel={() => showClearDialog = false}
+  on:cancel={() => (showClearDialog = false)}
 />
 
-<style>
-  :global(body) {
-    margin: 0;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-  }
-
-  :global(.bg-accent) {
-    background-color: hsl(var(--accent, 220 14.3% 95.9%));
-  }
-
-
-  /* Custom scrollbar styling */
-  :global(::-webkit-scrollbar) {
-    width: 6px;
-  }
-  
-  :global(::-webkit-scrollbar-track) {
-    background: rgba(0, 0, 0, 0.05);
-    border-radius: 3px;
-  }
-  
-  :global(::-webkit-scrollbar-thumb) {
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 3px;
-  }
-  
-  :global(::-webkit-scrollbar-thumb:hover) {
-    background: rgba(0, 0, 0, 0.3);
-  }
-
-  /* Smooth transitions for all interactive elements */
-  :global(button, .transition-all) {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  /* Backdrop blur fallback for browsers that don't support it */
-  @supports not (backdrop-filter: blur(12px)) {
-    :global(.backdrop-blur-xl) {
-      background-color: rgba(255, 255, 255, 0.85);
-    }
-    
-    :global(.backdrop-blur-sm) {
-      background-color: rgba(255, 255, 255, 0.75);
-    }
-  }
-
-  /* Improved focus styles */
-  :global(:focus-visible) {
-    outline: 2px solid rgba(59, 130, 246, 0.5);
-    outline-offset: 2px;
-  }
-
-  /* Animation keyframes */
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  :global(.animate-fade-in-up) {
-    animation: fadeInUp 0.6s ease-out;
-  }
-</style>
+<!-- Global JSON Modal -->
+<JsonModal
+  isOpen={$jsonModalState.isOpen}
+  title={$jsonModalState.title}
+  jsonData={$jsonModalState.jsonData}
+  onClose={jsonModalStore.close}
+/>

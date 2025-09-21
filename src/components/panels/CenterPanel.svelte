@@ -17,6 +17,10 @@
 
   const dispatch = createEventDispatcher();
 
+  // parsedContent 변경 감지를 위한 반응성 확보
+  $: parsedContent = selectedFile?.parsedContent;
+  $: parseError = selectedFile?.parseError;
+
   function handleKeySelect(event) {
     dispatch('keySelect', event.detail);
   }
@@ -32,20 +36,21 @@
     </div>
   {:else if selectedFile.type === 'risup'}
     <RisupViewer
-      parsedContent={selectedFile.parsedContent}
-      parseError={selectedFile.parseError}
+      {parsedContent}
+      {parseError}
+      fileId={selectedFile.id}
       on:keySelect={handleKeySelect}
     />
   {:else if selectedFile.type === 'risum'}
     <RisumViewer
-      parsedContent={selectedFile.parsedContent}
-      parseError={selectedFile.parseError}
+      {parsedContent}
+      {parseError}
       on:keySelect={handleKeySelect}
     />
   {:else if selectedFile.type === 'charx'}
     <CharxViewer
-      parsedContent={selectedFile.parsedContent}
-      parseError={selectedFile.parseError}
+      {parsedContent}
+      {parseError}
       on:keySelect={handleKeySelect}
     />
   {:else}
