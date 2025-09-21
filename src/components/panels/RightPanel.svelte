@@ -137,27 +137,11 @@
           <div class="h-full overflow-y-auto bg-white/70">
             {#if selectedFile}
               {#if selectedFile?.type === "risup"}
-                <RisupDetail
-                  {selectedFile}
-                  {selectedKey}
-                  {selectedValue}
-                  on:close={handleClose}
-                  on:valueUpdate
-                />
+                <RisupDetail {selectedKey} on:close={handleClose} on:valueUpdate />
               {:else if selectedFile?.type === "risum"}
-                <DefaultViewer
-                  {selectedFile}
-                  {selectedKey}
-                  {selectedValue}
-                  on:close={handleClose}
-                />
+                <DefaultViewer {selectedKey} on:close={handleClose} />
               {:else if selectedFile?.type === "charx"}
-                <DefaultViewer
-                  {selectedFile}
-                  {selectedKey}
-                  {selectedValue}
-                  on:close={handleClose}
-                />
+                <DefaultViewer {selectedKey} on:close={handleClose} />
               {/if}
             {/if}
           </div>

@@ -1,39 +1,67 @@
-<!--
-  OpenRouter Settings용 상세 입력 컴포넌트
-  RisupDetail.svelte에 추가할 조건부 코드
--->
+<script lang="ts">
+  import { currentRisupContent } from "../../../../../../lib/stores/risup.store";
+  import { getModelInfo } from "../../../../../../lib/utils/modelList";
+  import { getNestedValue } from "../../../../../../lib/utils/util";
+  import type { BotPreset } from "../../../../../../types/risu/preset.types";
+  import SliderInput from "../../../../../ui/common/forms/SliderInput.svelte";
+  import TextInput from "../../../../../ui/common/forms/TextInput.svelte";
+  import NumberInput from "../../../../../ui/common/forms/NumberInput.svelte";
+  import ModelList from "../../../../../ui/risup/ModelList.svelte";
+  import CheckInput from "../../../../../ui/common/forms/CheckInput.svelte";
+  import SelectInput from "../../../../../ui/common/forms/SelectInput.svelte";
+  import OptionInput from "../../../../../ui/common/forms/OptionInput.svelte";
 
-<!-- OpenRouter Fallback (Boolean) -->
-{:else if selectedKey === "openrouterFallback"}
+  /**
+   * ModelCommonAttrForms 컴포넌트
+   * @example
+   * <ModelCommonAttrForms
+   *   selectedKey={selectedKey}
+   * />
+   */
+  export let selectedKey = null;
+
+  // selection store에 현재 선택 상태 설정
+  $: storeContent = $currentRisupContent;
+  $: currentContent = (storeContent as BotPreset) || ({} as BotPreset);
+  $: dynamicModelInfo = getModelInfo(currentContent?.aiModel || "");
+
+  // 현재 값 계산 (중첩 경로 지원)
+  $: currentValue = getNestedValue(currentContent, selectedKey);
+  function formatValue(value) {
+    if (typeof value === "object" && value !== null) {
+      return JSON.stringify(value, null, 2);
+    }
+    return String(value);
+  }
+</script>
+
+{#if selectedKey === "openrouterFallback"}
   <CheckInput
     check={currentValue}
-    name={$language.openrouterFallback || "OpenRouter Fallback"}
     onChange={() => {
       currentValue = !currentValue;
     }}
   />
 
-<!-- OpenRouter Middle Out (Boolean) -->
+  <!-- OpenRouter Middle Out (Boolean) -->
 {:else if selectedKey === "openrouterMiddleOut"}
   <CheckInput
     check={currentValue}
-    name={$language.openrouterMiddleOut || "OpenRouter Middle Out"}
     onChange={() => {
       currentValue = !currentValue;
     }}
   />
 
-<!-- Use Instruct Prompt (Boolean) -->
+  <!-- Use Instruct Prompt (Boolean) -->
 {:else if selectedKey === "useInstructPrompt"}
   <CheckInput
     check={currentValue}
-    name={$language.useInstructPrompt || "Use Instruct Prompt"}
     onChange={() => {
       currentValue = !currentValue;
     }}
   />
 
-<!-- Provider Selection (Select) -->
+  <!-- Provider Selection (Select) -->
 {:else if selectedKey === "openrouterProvider"}
   <SelectInput bind:value={currentValue}>
     <OptionInput value="">Auto (Default)</OptionInput>
@@ -93,3 +121,4 @@
     <OptionInput value="Lynn">Lynn</OptionInput>
     <OptionInput value="Reflection">Reflection</OptionInput>
   </SelectInput>
+{/if}

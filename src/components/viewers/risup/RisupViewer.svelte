@@ -7,16 +7,16 @@
   import { risupStore, currentRisupContent } from "../../../lib/stores/risup.store";
   import ViewerButton from "../../ui/common/ViewerButton.svelte";
   import SliderInput from "../../ui/common/forms/SliderInput.svelte";
-  import ModelConditionalAttrButtons from "./attribute/model/ModelConditionalAttrButtons.svelte";
-  import ModelOobaAttrButtons from "./attribute/model/ModelOobaAttrButtons.svelte";
-  import ModelCommonAttrButtons from "./attribute/model/ModelCommonAttrButtons.svelte";
+  import ModelCommonAttrButtons from "./attribute/model/buttons/ModelCommonAttrButtons.svelte";
   import type { BotPreset } from "../../../types/risu/preset.types";
-  import ModelOobaSettingButtons from "./attribute/model/ModelOobaSettingButtons.svelte";
-  import ModelOpenRouterSettingButtons from "./attribute/model/ModelOpenRouterSettingButtons.svelte";
   import { FileText } from "lucide-svelte";
   import { jsonModalStore } from "../../../lib/stores/jsonModal.store";
   import SettingTabs from "../../ui/common/SettingTabs.svelte";
   import SettingTab from "../../ui/common/SettingTab.svelte";
+  import ModelConditionalAttrButtons from "./attribute/model/buttons/ModelConditionalAttrButtons.svelte";
+  import ModelOobaAttrButtons from "./attribute/model/buttons/ModelOobaAttrButtons.svelte";
+  import ModelOobaSettingButtons from "./attribute/model/buttons/ModelOobaSettingButtons.svelte";
+  import ModelOpenRouterSettingButtons from "./attribute/model/buttons/ModelOpenRouterSettingButtons.svelte";
 
   /**
    * RisupViewer 컴포넌트
@@ -123,7 +123,9 @@
 
           <SettingTab name="prompt" {activeTab}>
             <!-- 추후 프롬프트 관련 컴포넌트 추가 예정 -->
-            <div class="rounded-lg border border-yellow-200 bg-yellow-50 p-4 text-center dark:border-yellow-600 dark:bg-yellow-900/20">
+            <div
+              class="rounded-lg border border-yellow-200 bg-yellow-50 p-4 text-center dark:border-yellow-600 dark:bg-yellow-900/20"
+            >
               <p class="text-sm text-yellow-600 dark:text-yellow-400">
                 프롬프트 설정은 추후 추가될 예정입니다.
               </p>
@@ -132,7 +134,9 @@
 
           <SettingTab name="etc" {activeTab}>
             <!-- 추후 기타 설정 컴포넌트 추가 예정 -->
-            <div class="rounded-lg border border-gray-200 bg-gray-50 p-4 text-center dark:border-gray-600 dark:bg-gray-800">
+            <div
+              class="rounded-lg border border-gray-200 bg-gray-50 p-4 text-center dark:border-gray-600 dark:bg-gray-800"
+            >
               <p class="text-sm text-gray-600 dark:text-gray-400">
                 기타 설정은 추후 추가될 예정입니다.
               </p>

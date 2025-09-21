@@ -1,20 +1,10 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from "svelte";
-  import { language } from "$lib/i18n";
-  import ModelList from "../../../../ui/risup/ModelList.svelte";
-  import Help from "../../../../ui/common/others/Help.svelte";
-  import { getModelInfo } from "../../../../../lib/utils/modelList";
-  import { risupStore, currentRisupContent } from "../../../../../lib/stores/risup.store";
-  import ViewerButton from "../../../../ui/common/ViewerButton.svelte";
-  import SliderInput from "../../../../ui/common/forms/SliderInput.svelte";
-  import type { BotPreset } from "../../../../../types/risu/preset.types";
-  import { LLMFormat } from "../../../../../types/risu/llm/model.types";
-  import Accordion from "../../../../ui/common/Accordion.svelte";
-  import ChatFormatSettings from "../chat/ChatFormatSettings.svelte";
-  import SelectInput from "../../../../ui/common/forms/SelectInput.svelte";
-  import OptionInput from "../../../../ui/common/forms/OptionInput.svelte";
-  import OptionalInput from "../../../../ui/common/forms/OptionalInput.svelte";
-  import { risuStorage } from "../../../../../lib/storage";
+  import { currentRisupContent, risupStore } from "../../../../../../lib/stores/risup.store";
+  import type { BotPreset } from "../../../../../../types/risu/preset.types";
+  import { getModelInfo } from "../../../../../../lib/utils/modelList";
+  import Accordion from "../../../../../ui/common/Accordion.svelte";
+  import ViewerButton from "../../../../../ui/common/ViewerButton.svelte";
 
   /**
    * ModelOobaSettingButtons 컴포넌트

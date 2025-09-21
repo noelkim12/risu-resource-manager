@@ -1,14 +1,10 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from "svelte";
-  import { language } from "$lib/i18n";
-  import ModelList from "../../../../ui/risup/ModelList.svelte";
-  import Help from "../../../../ui/common/others/Help.svelte";
-  import { getModelInfo } from "../../../../../lib/utils/modelList";
-  import { risupStore, currentRisupContent } from "../../../../../lib/stores/risup.store";
-  import ViewerButton from "../../../../ui/common/ViewerButton.svelte";
-  import SliderInput from "../../../../ui/common/forms/SliderInput.svelte";
-  import type { BotPreset } from "../../../../../types/risu/preset.types";
-  import { LLMFormat } from "../../../../../types/risu/llm/model.types";
+  import { currentRisupContent, risupStore } from "../../../../../../lib/stores/risup.store";
+  import type { BotPreset } from "../../../../../../types/risu/preset.types";
+  import { getModelInfo } from "../../../../../../lib/utils/modelList";
+  import ViewerButton from "../../../../../ui/common/ViewerButton.svelte";
+  import { LLMFormat } from "../../../../../../types/risu/llm/model.types";
 
   /**
    * ModelOobaAttrButtons 컴포넌트

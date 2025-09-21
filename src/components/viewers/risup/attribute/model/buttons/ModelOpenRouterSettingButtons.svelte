@@ -1,15 +1,10 @@
 <script lang="ts">
-  import { language } from "$lib/i18n";
-  import Accordion from "../../../../ui/common/Accordion.svelte";
-  import Check from "../../../../ui/common/forms/CheckInput.svelte";
-  import SelectInput from "../../../../ui/common/forms/SelectInput.svelte";
-  import OptionInput from "../../../../ui/common/forms/OptionInput.svelte";
-  import ChatFormatSettings from "../chat/ChatFormatSettings.svelte";
+  import Accordion from "../../../../../ui/common/Accordion.svelte";
   import { createEventDispatcher, onMount } from "svelte";
-  import { currentRisupContent, risupStore } from "../../../../../lib/stores/risup.store";
-  import type { BotPreset } from "../../../../../types/risu/preset.types";
-  import { getModelInfo } from "../../../../../lib/utils/modelList";
-  import ViewerButton from "../../../../ui/common/ViewerButton.svelte";
+  import { currentRisupContent, risupStore } from "../../../../../../lib/stores/risup.store";
+  import type { BotPreset } from "../../../../../../types/risu/preset.types";
+  import { getModelInfo } from "../../../../../../lib/utils/modelList";
+  import ViewerButton from "../../../../../ui/common/ViewerButton.svelte";
 
   /**
    * ModelOpenRouterSettingButtons 컴포넌트
